@@ -71,7 +71,7 @@ internal static class EfHashTagExtensions
 
 ---
 
-## 📂 Output Location
+## 📂 [Output Location](https://andrewlock.net/creating-a-source-generator-part-6-saving-source-generator-output-in-source-control/)
 
 Add the following code to your ptoject file to add the generated code to project folder to be able to find the source code by hashtag later:
 
@@ -80,6 +80,15 @@ Add the following code to your ptoject file to add the generated code to project
     <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
     <CompilerGeneratedFilesOutputPath>Generated</CompilerGeneratedFilesOutputPath>
 </PropertyGroup>
+```
+
+And then exlude it from compilation
+
+```
+<ItemGroup>
+    <!-- Exclude the output of source generators from the compilation -->
+    <Compile Remove="$(CompilerGeneratedFilesOutputPath)/**/*.cs" />
+</ItemGroup>
 ```
 
 ---
