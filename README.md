@@ -1,5 +1,7 @@
 ﻿# EfHashTagGenerator
 
+[![NuGet version (EfHashTagGenerator)](https://img.shields.io/nuget/v/EfHashTagGenerator.svg?style=flat-square)](https://www.nuget.org/packages/EfHashTagGenerator/)
+
 **EfHashTagGenerator** is a Roslyn Incremental Source Generator that enhances EF Core LINQ query tracing by generating deterministic and consistent SQL query tags based on the call site. 
 
 
