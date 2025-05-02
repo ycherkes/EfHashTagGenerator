@@ -11,7 +11,6 @@ The tag is derived from the call‑site (file + member + line) and lets you in
 
 | Common pain | EfHashTagGenerator gives you… |
 |-------------|------------------------------|
-| **Manual `TagWith("…")`** is easy to forget or duplicate | 100 % automatic coverage—every query is tagged |
 | **`TagWithCallSite()`** embeds full paths & line numbers → long SQL comments and possible code disclosure | A short, opaque 8‑character hash (e.g. `#a1b2c3d4`) that is stable across machines |
 | **DbCommandInterceptor + StackTrace** or similar runtime hacks | Near-Zero runtime overhead—everything happens during build |
 
