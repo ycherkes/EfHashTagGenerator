@@ -2,8 +2,6 @@
 
 [![NuGet version (EfHashTagGenerator)](https://img.shields.io/nuget/v/EfHashTagGenerator.svg?style=flat-square)](https://www.nuget.org/packages/EfHashTagGenerator/)
 
-# EfHashTagGenerator
-
 **EfHashTagGenerator** is an incremental Roslyn source‑generator that injects a short, stable hash‑tag into every Entity Framework Core LINQ query **at compile time**.  
 The tag is derived from the call‑site (file + member + line) and lets you instantly map a SQL trace back to the exact line of code—without leaking your project structure in production.
 
