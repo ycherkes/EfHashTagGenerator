@@ -2,60 +2,76 @@
 
 [![NuGet version (EfHashTagGenerator)](https://img.shields.io/nuget/v/EfHashTagGenerator.svg?style=flat-square)](https://www.nuget.org/packages/EfHashTagGenerator/)
 
-**EfHashTagGenerator** is an incremental Roslyn source‑generator that injects a short, stable hash‑tag into every Entity Framework Core LINQ query **at compile time**.  
-The tag is derived from the call‑site (file + member + line) and lets you instantly map a SQL trace back to the exact line of code—without leaking your project structure in production.
+**EfHashTagGenerator** is a Roslyn Incremental Source Generator that enhances EF Core LINQ query tracing by generating deterministic and consistent SQL query tags based on the call site. 
 
----
 
-## Why do I need it?
+## 🛠 Usage
 
-| Common pain | EfHashTagGenerator gives you… |
-|-------------|------------------------------|
-| **`TagWithCallSite()`** embeds full paths & line numbers → long SQL comments and possible code disclosure | A short, opaque 8‑character hash (e.g. `#a1b2c3d4`) that is stable across machines |
-| **DbCommandInterceptor + StackTrace** or similar runtime hacks | Near-Zero runtime overhead—everything happens during build |
-
----
-
-## Installation
-
-```bash
-dotnet add package EfHashTagGenerator
-```
----
-
-## Quick Start
+1. Reference this generator from your project (as an analyzer NuGet package or project reference).
+2. In your LINQ queries, simply call:
 
 ```csharp
-// Add TagWithCallSiteHash call:
-var users = _context.Users.Where(u => u.IsActive).TagWithCallSiteHash();
-
-// The source generator will automatically emit the equivalent:
-var users = _context.Users.Where(u => u.IsActive).TagWith("#c9c32584");
+query.TagWithCallSiteHash();
 ```
 
-Result in SQL profiler:
+3. The source generator will automatically emit:
 
-```sql
--- #c9c32584
-SELECT ...
+```csharp
+query.TagWith("#a1b2c3d4");
 ```
 
-The tag is calculated from `UsersRepository.GetActive:L42`.
+The tag `#a1b2c3d4` is generated from a stable hash of the call site like:
+
+```
+MyClass.GetUsers:L42
+```
+
+## 🔧 How It Works
+
+1. Scans all invocations of `TagWithCallSiteHash()` in your codebase.
+2. Extracts:
+   - File path
+   - Method name
+   - Line number
+3. Computes a **[deterministic hash code](https://andrewlock.net/why-is-string-gethashcode-different-each-time-i-run-my-program-in-net-core/)**.
+4. Emits a helper class:
+
+```csharp
+
+internal static class EfHashTagExtensions
+{
+    public static IQueryable<T> TagWithCallSiteHash<T>(
+        this IQueryable<T> query,
+        [CallerFilePath] string filePath = null,
+        [CallerMemberName] string memberName = null,
+        [CallerLineNumber] int lineNumber = 0)
+    {
+        var location = $"{Path.GetFileNameWithoutExtension(filePath)}.{memberName}:L{lineNumber}";
+        var hashTag = GetHashTagByLocation(location);
+        return query.TagWith(hashTag);
+    }
+
+    private static string GetHashTagByLocation(string location)
+    {
+        switch (location)
+        {
+            case "Test0.Main:L38": return "#c9c32584";
+            // ...
+            default: return location;
+        }
+    }
+}
+```
 
 ---
 
-## How it Works
+## 📝 Requirements
 
-1. Scans for `TagWithCallSiteHash()` calls
-2. Builds the string `<File>.<Member>:L<Line>`
-3. Hashes it
-4. Emits `EfHashTagExtensions.g.cs` with a switch lookup:
+- EF Core (uses `.TagWith()` internally)
 
-   ```csharp
-   case "UsersRepository.GetActive:L42": return "#c9c32584";
-   ```
+---
 
-*## 📂 [Output Location](https://andrewlock.net/creating-a-source-generator-part-6-saving-source-generator-output-in-source-control/)
+## 📂 [Output Location](https://andrewlock.net/creating-a-source-generator-part-6-saving-source-generator-output-in-source-control/)
 
 Add the following code to your ptoject file to add the generated code to project folder to be able to find the source code by hashtag later:
 
@@ -77,36 +93,6 @@ And then exlude it from compilation
 
 ---
 
-## Comparison with Alternatives
+## 📃 License
 
-| Approach | Pros | Cons |
-|----------|------|------|
-| **`TagWith("manual")`** | Built into EF Core | Manual work, inconsistent naming |
-| **`TagWithCallSite()`** | Automatic tag, no strings to type | Long paths, machine‑dependent, exposes code structure, unstable after refactoring |
-| **DbCommandInterceptor + StackTrace** | Works on any EF Core version | Runtime cost; JIT inlining may break line numbers |
-
----
-
-## Limitations
-
-* The hash changes when the **line number** changes (code added/removed above).  
-* Possible collisions.
-
----
-
-## Why choose EfHashTagGenerator?
-
-* ⚡ **Fast tracing** – jump from SQL profiler to Visual Studio in seconds.  
-* 🛡 **Safe** – short, opaque tags; no file paths or method names in production.  
-* 🏎 **Near-Zero runtime cost** – everything is compile‑time.  
-
----
-
-## Contributing
-
-Issues, ideas, and pull requests are welcome!
----
-
-## License
-
-Apache‑2.0
+Apache 2.0
