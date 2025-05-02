@@ -84,7 +84,7 @@ And then exlude it from compilation
 |----------|------|------|
 | **`TagWith("manual")`** | Built into EF Core | Manual work, inconsistent naming |
 | **`TagWithCallSite()`** | Automatic tag, no strings to type | Long paths, machine‑dependent, exposes code structure, unstable after refactoring |
-| **DbCommandInterceptor + StackTrace** | Runtime cost; JIT inlining may break line numbers |
+| **DbCommandInterceptor + StackTrace** | Works on any EF Core version | Runtime cost; JIT inlining may break line numbers |
 
 ---
 
