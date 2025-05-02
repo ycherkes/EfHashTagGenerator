@@ -27,7 +27,7 @@ dotnet add package EfHashTagGenerator
 ## Quick Start
 
 ```csharp
-// Before:
+// Add TagWithCallSiteHash call:
 var users = _context.Users.Where(u => u.IsActive).TagWithCallSiteHash();
 
 // The source generator will automatically emit the equivalent:
