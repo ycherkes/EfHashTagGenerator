@@ -95,6 +95,7 @@ And then exclude it from compilation
 ## Useful links:
 
 - [Query tagging](https://www.danielmallott.com/posts/tag-your-queries-in-entity-framework-core)
+- [Better Tagging of EF Core Queries with .NET 6](https://thirty25.blog/blog/2021/12/tagging-query-with-ef-core)
 - [Automatic tagging with DbCommandInterceptor and StackTrace](https://stackoverflow.com/a/78550020/7901167)
 - [EF Core Traces Proof of Concept](https://github.com/bymse/poc-efcore-traces/tree/main)
 
