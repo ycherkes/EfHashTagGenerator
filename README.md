@@ -73,7 +73,7 @@ internal static class EfHashTagExtensions
 
 ## 📂 [Output Location](https://andrewlock.net/creating-a-source-generator-part-6-saving-source-generator-output-in-source-control/)
 
-Add the following code to your ptoject file to add the generated code to project folder to be able to find the source code by hashtag later:
+Add the following code to your project file to add the generated code to the project folder to be able to find the source code by hashtag later:
 
 ```
 <PropertyGroup>
@@ -82,7 +82,7 @@ Add the following code to your ptoject file to add the generated code to project
 </PropertyGroup>
 ```
 
-And then exlude it from compilation
+And then exclude it from compilation
 
 ```
 <ItemGroup>
@@ -90,6 +90,13 @@ And then exlude it from compilation
     <Compile Remove="$(CompilerGeneratedFilesOutputPath)/**/*.cs" />
 </ItemGroup>
 ```
+
+---
+## Useful links:
+
+- [Query tagging](https://www.danielmallott.com/posts/tag-your-queries-in-entity-framework-core)
+- [Automatic tagging with DbCommandInterceptor and StackTrace](https://stackoverflow.com/a/78550020/7901167)
+- [EF Core Traces Proof of Concept](https://github.com/bymse/poc-efcore-traces/tree/main)
 
 ---
 
