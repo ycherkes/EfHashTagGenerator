@@ -101,6 +101,7 @@ And then exclude it from compilation
 - [Better Tagging of EF Core Queries with .NET 6](https://thirty25.blog/blog/2021/12/tagging-query-with-ef-core)
 - [Automatic tagging with DbCommandInterceptor and StackTrace](https://stackoverflow.com/a/78550020/7901167)
 - [Why is string.GetHashCode() different each time I run my program in .NET Core?](https://andrewlock.net/why-is-string-gethashcode-different-each-time-i-run-my-program-in-net-core)
+- [Slow Sql Server queries tagged with callsite hash](https://gist.github.com/ycherkes/fe6688ea5be65df0c38e8948e0ffc464)
 ---
 
 ## 📃 License
