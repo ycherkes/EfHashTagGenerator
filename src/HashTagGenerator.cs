@@ -1,10 +1,11 @@
+﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Text;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Text;
 
 namespace EfHashTagGenerator;
 
@@ -18,8 +19,8 @@ public class HashTagGenerator : IIncrementalGenerator
 
         var calls = context.SyntaxProvider
             .CreateSyntaxProvider(
-                predicate: static (s, _) => s is InvocationExpressionSyntax 
-                { 
+                predicate: static (s, _) => s is InvocationExpressionSyntax
+                {
                     Expression: MemberAccessExpressionSyntax
                     {
                         Name.Identifier.Text: "TagWithCallSiteHash"
@@ -53,12 +54,17 @@ public class HashTagGenerator : IIncrementalGenerator
         }
 
         var switchCases = new StringBuilder();
-        var sortedEntries = entries.OrderBy(e => e.file).ThenBy(e => e.method).ThenBy(e => e.line).ToImmutableArray();
 
-        for (var index = 0; index < sortedEntries.Length; index++)
+        var locations = entries
+            .Select(e => $"{System.IO.Path.GetFileNameWithoutExtension(e.file)}.{e.method}:L{e.line}")
+            .Distinct()
+            .ToArray();
+
+        Array.Sort(locations, StringComparer.InvariantCulture);
+
+        for (var index = 0; index < locations.Length; index++)
         {
-            var (file, method, line) = sortedEntries[index];
-            var location = $"{System.IO.Path.GetFileNameWithoutExtension(file)}.{method}:L{line}";
+            var location = locations[index];
             var hash = GetDeterministicHashCode(location).ToString("x8");
             if (index > 0)
             {
