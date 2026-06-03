@@ -104,7 +104,7 @@ public class Tests
                 GeneratedSources =
                 {
                     // Verify the generated sources
-                    (typeof(HashTagGenerator), "EfHashTagExtensions.g.cs", expectedGeneratedExtensionMethodSource)
+                    (typeof(HashTagGenerator), "EfHashTagExtensions.g.cs", expectedGeneratedExtensionMethodSource.ReplaceLineEndings("\n"))
                 }
             },
         };
