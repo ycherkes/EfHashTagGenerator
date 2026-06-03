@@ -104,7 +104,7 @@ public class HashTagGenerator : IIncrementalGenerator
                   }
                   """;
 
-        context.AddSource("EfHashTagExtensions.g.cs", SourceText.From(source, Encoding.UTF8));
+        context.AddSource("EfHashTagExtensions.g.cs", SourceText.From(source.Replace("\r\n", "\n"), Encoding.UTF8));
     }
 
     // https://andrewlock.net/why-is-string-gethashcode-different-each-time-i-run-my-program-in-net-core/
